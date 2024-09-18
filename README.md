@@ -2,6 +2,8 @@
 
 Welcome to the **Feedforward Neural Network** project! This project is a simple yet powerful implementation of a **neural network** built in **C99** to classify **28x28 pixel images of digits**. 📊
 
+PS. Everything I do is on WSL2 runnig Debian 12 (Bookworm)
+
 ---
 
 ## 🚀 Features
