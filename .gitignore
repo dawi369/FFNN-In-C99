@@ -2,7 +2,7 @@
 .vscode/
 
 # Virtual environment
-Venv/
+myenv/
 
 # Large datasets
 data/training_labels.txt
