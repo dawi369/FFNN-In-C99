@@ -1,0 +1,11 @@
+# VS Code settings
+.vscode/
+
+# Virtual environment
+Venv/
+
+# Large datasets
+data/training_labels.txt
+data/training_images.txt
+data/test_labels.txt
+data/test_images.txt
