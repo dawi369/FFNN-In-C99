@@ -12,6 +12,11 @@
 #define OUTPUT_SIZE 10         // Number of output classes (digits 0-9)
 #define LEARNING_RATE 0.01     // Learning rate for weight updates
 
+// Define parameters for training
+#define TRAIN_SAMPLES 60000    // Number of training samples
+#define TEST_SAMPLES 10000     // Number of test samples
+#define EPOCHS 2               // Number of training epochs
+
 // Activation function: ReLU
 double relu(double x) {
     return x > 0 ? x : 0;
@@ -48,28 +53,25 @@ int main() {
     srand((unsigned int)time(NULL));
 
     // Create the neural network
-    NeuralNetwork *nn = create_network(INPUT_SIZE, HIDDEN_LAYERS, HIDDEN_SIZE, OUTPUT_SIZE);
-
-    int train_samples = 60000;     // Number of training samples
-    int test_samples = 10000;      // Number of test samples
-    int epochs = 4;               // Number of training epochs
+    // Creates pointer to the neural network
+    NeuralNetwork *nn = create_network(INPUT_SIZE, HIDDEN_LAYERS, HIDDEN_SIZE, OUTPUT_SIZE);             // Number of training epochs
 
     // Allocate memory for training inputs and targets
-    double **train_inputs = malloc(train_samples * sizeof(double *));
-    double **train_targets = malloc(train_samples * sizeof(double *));
-    for (int i = 0; i < train_samples; i++) {
+    double **train_inputs = malloc(TRAIN_SAMPLES * sizeof(double *));
+    double **train_targets = malloc(TRAIN_SAMPLES * sizeof(double *));
+    for (int i = 0; i < TRAIN_SAMPLES; i++) {
         train_inputs[i] = malloc(INPUT_SIZE * sizeof(double));
         train_targets[i] = malloc(OUTPUT_SIZE * sizeof(double));
     }
 
     // Read training data from files
-    read_data("dataset_work_dir/training_images.txt", "dataset_work_dir/training_labels.txt", train_inputs, train_targets, train_samples);
+    read_data("data/training_images.txt", "data/training_labels.txt", train_inputs, train_targets, TRAIN_SAMPLES);
 
     // Train the network
-    train(nn, train_inputs, train_targets, train_samples, epochs);
+    train(nn, train_inputs, train_targets, TRAIN_SAMPLES, EPOCHS);
 
     // Free training data
-    for (int i = 0; i < train_samples; i++) {
+    for (int i = 0; i < TRAIN_SAMPLES; i++) {
         free(train_inputs[i]);
         free(train_targets[i]);
     }
@@ -77,21 +79,21 @@ int main() {
     free(train_targets);
 
     // Allocate memory for test inputs and targets
-    double **test_inputs = malloc(test_samples * sizeof(double *));
-    double **test_targets = malloc(test_samples * sizeof(double *));
-    for (int i = 0; i < test_samples; i++) {
+    double **test_inputs = malloc(TEST_SAMPLES * sizeof(double *));
+    double **test_targets = malloc(TEST_SAMPLES * sizeof(double *));
+    for (int i = 0; i < TEST_SAMPLES; i++) {
         test_inputs[i] = malloc(INPUT_SIZE * sizeof(double));
         test_targets[i] = malloc(OUTPUT_SIZE * sizeof(double));
     }
 
     // Read test data from files
-    read_data("dataset_work_dir/test_images.txt", "dataset_work_dir/test_labels.txt", test_inputs, test_targets, test_samples);
+    read_data("data/test_images.txt", "data/test_labels.txt", test_inputs, test_targets, TEST_SAMPLES);
 
     // Test the network
-    test_network(nn, test_inputs, test_targets, test_samples);
+    test_network(nn, test_inputs, test_targets, TEST_SAMPLES);
 
     // Free test data
-    for (int i = 0; i < test_samples; i++) {
+    for (int i = 0; i < TEST_SAMPLES; i++) {
         free(test_inputs[i]);
         free(test_targets[i]);
     }
