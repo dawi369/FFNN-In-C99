@@ -1,41 +1,53 @@
 #include <stdio.h>
+// This is without UVM
+
+/*
+Debugging and Profiling
+Tools:
+cuda-gdb: A CUDA-aware extension of the GNU Debugger for debugging device code.
+nvprof / Nsight Systems: Profiling tools to analyze performance bottlenecks.
+Use device-side printf (available in newer CUDA versions) for debugging.
+*/
 
 // CUDA kernel function to add values to an array
+#include <stdio.h>
+
+// Device code (kernel) running on the GPU
 __global__ void kernel_test(int *array) {
-    int index = threadIdx.x;
-    array[index] = index;
+    int index = threadIdx.x; // Each thread gets its unique index
+    array[index] = index;    // Writes its index value into the device array
 }
 
 int main() {
-    // Define array size
+    // Host code running on the CPU
     const int array_size = 10;
     const int array_bytes = array_size * sizeof(int);
 
-    // Allocate host memory
+    // Host memory allocation
     int host_array[array_size];
 
-    // Allocate device memory
+    // Device memory allocation
     int *device_array;
     cudaMalloc((void **)&device_array, array_bytes);
 
-    // Launch kernel with 10 threads
+    // Kernel launch: host instructs device to execute kernel
     kernel_test<<<1, array_size>>>(device_array);
 
-    // Copy results from device to host
+    // Data transfer from device to host
     cudaMemcpy(host_array, device_array, array_bytes, cudaMemcpyDeviceToHost);
 
-    // Print the results
+    // Output results on the host
     printf("CUDA output:\n");
     for (int i = 0; i < array_size; i++) {
         printf("%d ", host_array[i]);
     }
     printf("\n");
 
-    // Free the device memory
+    // Device memory deallocation
     cudaFree(device_array);
 
-    // If it reaches here, the test passed
+    // Host indicates successful completion
     printf("CUDA test passed successfully!\n");
-    
+
     return 0;
 }
